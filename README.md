@@ -23,13 +23,13 @@ This ensures the tests run on your local machine instead of a Selenium Grid.
 
 ```bash
 # Run UI tests and generate Allure report
-mvn clean test -Denv=test -Dcucumber.filter.tags='@UI' allure:report allure:serve
+mvn clean test -Denv=test -Dcucumber.filter.tags='@UI' allure:serve
 
 # Run API tests and generate Allure report
-mvn clean test -Denv=test -Dcucumber.filter.tags='@API' allure:report allure:serve
+mvn clean test -Denv=test -Dcucumber.filter.tags='@API' allure:serve
 
 # Run ALL tests and generate Allure report
-mvn clean test allure:report allure:serve
+mvn clean test allure:serve
 ```
 
 ### Docker Execution
