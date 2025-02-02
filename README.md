@@ -29,7 +29,7 @@ mvn clean test -Denv=test -Dcucumber.filter.tags='@UI' allure:serve
 mvn clean test -Denv=test -Dcucumber.filter.tags='@API' allure:serve
 
 # Run ALL tests and generate Allure report
-mvn clean test allure:serve
+mvn clean test -Denv=test allure:serve
 ```
 
 ### Docker Execution
