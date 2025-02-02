@@ -42,6 +42,10 @@ ENV=test TAGS='@API' docker compose -f docker-compose.api.yml up --build
 
 # Run ALL tests in Docker
 ENV=test TAGS='@UI or @API' docker compose -f docker-compose.ui.yml up --build
+
+Note: After running tests using Docker, the HTML Allure report will be generated in the allure-report folder. Open index.html in your browser to view the report.
+After API test execution, JSON files will be generated and stored in the lockers folder.
+
 ```
 
 ### Project Structure
