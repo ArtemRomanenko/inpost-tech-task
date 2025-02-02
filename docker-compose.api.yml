@@ -1,0 +1,15 @@
+
+services:
+  tests:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        ENV: ${ENV}
+        TAGS: ${TAGS}
+
+    volumes:
+      - ./allure-results:/app/target/allure-results
+      - ./allure-report:/app/target/allure-report
+      - ./lockers:/app/target/lockers

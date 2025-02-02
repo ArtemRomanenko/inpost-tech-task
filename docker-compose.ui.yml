@@ -1,0 +1,69 @@
+
+services:
+  selenium-hub:
+    image: selenium/hub:4.9.0
+    container_name: selenium-hub
+    ports:
+      - "4444:4444"
+    environment:
+      - SE_GRID_MAX_SESSION=5
+      - SE_GRID_BROWSER_TIMEOUT=60
+      - SE_GRID_SESSION_TIMEOUT=300
+      - SE_OPTS=--log-level FINE
+    healthcheck:
+      test: ["CMD", "curl", "-s", "http://localhost:4444/wd/hub/status | jq -r '.value.ready' | grep -q true"]
+      interval: 5s
+      retries: 10
+      start_period: 5s
+      timeout: 10s
+
+  chrome:
+    image: selenium/node-chrome:4.9.0
+    depends_on:
+      selenium-hub:
+        condition: service_healthy
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_INSTANCES=2
+      - SE_NODE_MAX_SESSIONS=2
+      - SE_NODE_GRID_URL=http://selenium-hub:4444
+
+  firefox:
+    image: selenium/node-firefox:4.9.0
+    depends_on:
+      selenium-hub:
+        condition: service_healthy
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_INSTANCES=2
+      - SE_NODE_MAX_SESSIONS=2
+      - SE_NODE_GRID_URL=http://selenium-hub:4444
+
+  tests:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        ENV: ${ENV}
+        TAGS: ${TAGS}
+    depends_on:
+      selenium-hub:
+        condition: service_healthy
+      chrome:
+        condition: service_started
+      firefox:
+        condition: service_started
+    environment:
+      - START_XVFB=false
+      - SE_NODE_MAX_SESSIONS=4
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+      - SELENIUM_GRID_URL=http://selenium-hub:4444/wd/hub
+    volumes:
+      - ./allure-results:/app/target/allure-results
+      - ./allure-report:/app/target/allure-report
+      - ./lockers:/app/target/lockers
