@@ -9,6 +9,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
+
 import java.net.URL;
 
 public class DriverFactory {
@@ -17,14 +18,7 @@ public class DriverFactory {
 
     public WebDriver createLocalDriver(String browser) {
         try {
-            DriverManagerType type = DriverManagerType.valueOf(browser.toUpperCase());
-            WebDriverManager.getInstance(type).setup();
-
-            return switch (type) {
-                case CHROME -> new ChromeDriver(getChromeOptions());
-                case FIREFOX -> new FirefoxDriver(getFirefoxOptions());
-                default -> throw new IllegalArgumentException("Unsupported browser: " + browser);
-            };
+            return createDriverByType(browser);
         } catch (Exception e) {
             throw new RuntimeException("Failed to create local driver for browser: " + browser, e);
         }
@@ -38,6 +32,16 @@ public class DriverFactory {
         }
     }
 
+    private WebDriver createDriverByType(String browser) {
+        DriverManagerType type = DriverManagerType.valueOf(browser.toUpperCase());
+        WebDriverManager.getInstance(type).setup();
+
+        return switch (type) {
+            case CHROME -> new ChromeDriver(getChromeOptions());
+            case FIREFOX -> new FirefoxDriver(getFirefoxOptions());
+            default -> throw new IllegalArgumentException("Unsupported browser type: " + type);
+        };
+    }
 
     private MutableCapabilities getOptions(String browser) {
         return switch (browser.toUpperCase()) {

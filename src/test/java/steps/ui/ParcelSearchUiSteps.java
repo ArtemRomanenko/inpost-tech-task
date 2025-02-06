@@ -2,7 +2,6 @@ package steps.ui;
 
 import config.Config;
 import driver.DriverManager;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -28,10 +27,6 @@ public class ParcelSearchUiSteps {
     @Given("User navigate to InPost website")
     public void userIsNavigateToInPostWebsite() {
         driver.get(homePage);
-    }
-
-    @And("User close Cookie banner")
-    public void userCloseCookieBanner() {
         wait.until(ExpectedConditions.visibilityOfElementLocated(acceptCookieButton)).click();
     }
 

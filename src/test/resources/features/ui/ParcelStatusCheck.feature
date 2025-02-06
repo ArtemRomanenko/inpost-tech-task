@@ -3,7 +3,6 @@ Feature: InPost Parcel Status Check
 
   Scenario Outline: Check parcel status for different parcel numbers
     Given User navigate to InPost website
-    And User close Cookie banner
     When User search for parcel number "<parcelNumber>"
     Then The status should be "<expectedStatus>"
 

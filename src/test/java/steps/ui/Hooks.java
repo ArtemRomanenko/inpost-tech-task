@@ -13,7 +13,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Slf4j
-public class BaseStep {
+public class Hooks {
 
     @Before(value = "@UI")
     public void initBrowser() {
