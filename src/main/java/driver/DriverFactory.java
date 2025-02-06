@@ -16,23 +16,28 @@ public class DriverFactory {
     private final boolean HEADLESS = Config.IS_HEADLESS;
 
     public WebDriver createLocalDriver(String browser) {
-        DriverManagerType type = DriverManagerType.valueOf(browser.toUpperCase());
-        WebDriverManager.getInstance(type).setup();
+        try {
+            DriverManagerType type = DriverManagerType.valueOf(browser.toUpperCase());
+            WebDriverManager.getInstance(type).setup();
 
-        return switch (type) {
-            case CHROME -> new ChromeDriver(getChromeOptions());
-            case FIREFOX -> new FirefoxDriver(getFirefoxOptions());
-            default -> throw new IllegalArgumentException("Unsupported browser: " + browser);
-        };
+            return switch (type) {
+                case CHROME -> new ChromeDriver(getChromeOptions());
+                case FIREFOX -> new FirefoxDriver(getFirefoxOptions());
+                default -> throw new IllegalArgumentException("Unsupported browser: " + browser);
+            };
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create local driver for browser: " + browser, e);
+        }
     }
 
     public WebDriver createRemoteDriver(String browser) {
         try {
             return new RemoteWebDriver(new URL(GRID_URL), getOptions(browser));
         } catch (Exception e) {
-            throw new RuntimeException("Grid connection failed: " + GRID_URL, e);
+            throw new RuntimeException("Failed to create remote driver for browser: " + browser + " at grid URL: " + GRID_URL, e);
         }
     }
+
 
     private MutableCapabilities getOptions(String browser) {
         return switch (browser.toUpperCase()) {
