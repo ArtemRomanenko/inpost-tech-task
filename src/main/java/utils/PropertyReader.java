@@ -26,7 +26,8 @@ public class PropertyReader {
             }
             properties.load(input);
         } catch (IOException e) {
-            log.info("Failed to load properties - {}", e.getMessage());
+            log.error("Failed to load properties - {}", e.getMessage());
+            throw new RuntimeException("Failed to load properties: " + configFile, e);
         }
     }
 

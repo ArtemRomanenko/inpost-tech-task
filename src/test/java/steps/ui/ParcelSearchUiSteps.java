@@ -2,6 +2,7 @@ package steps.ui;
 
 import config.Config;
 import driver.DriverManager;
+import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -15,14 +16,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ParcelSearchUiSteps {
 
-    private final WebDriver driver = DriverManager.getDriver();
-    private final WebDriverWait wait = new WebDriverWait(driver, 5);
+    private WebDriver driver;
+    private WebDriverWait wait;
     private final String homePage = Config.HOME_PAGE;
 
     private final By acceptCookieButton = By.xpath("//button[@id='onetrust-accept-btn-handler']");
     private final By searchField = By.xpath("//input[@name='number']");
     private final By parcelStatus = By.xpath("//div[@class='single--status--block -active']");
 
+    @Before("@UI")
+    public void ensureDriver() {
+        DriverManager.setBrowser();
+        driver = DriverManager.getDriver();
+        wait = new WebDriverWait(driver, 5);
+    }
 
     @Given("User navigate to InPost website")
     public void userIsNavigateToInPostWebsite() {
